@@ -1,4 +1,4 @@
-Akun admin sudah ada seeder nya jadinya bisa ke terminal lalu paste ini
+pword admin sudah ada seeder nya jadinya bisa ke terminal lalu paste ini
 php artisan db:seed --class=AdminSeeder
 lalu enter maka akun Admin otomatis terbuat,lalu akun admin dan pw nya adalah
 admin@gmail.com pw : password
@@ -8,6 +8,8 @@ Petugas bisa dibuat manual setelah masuk ke halaman admin, nanti ada halaman man
 
 
 user juga sama harus dibuat manual,tapi di halaman register,buatlah akun user dengan contoh : user@gmail.com pw : password
+
+disini saya memakai framework laravel
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
