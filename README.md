@@ -1,4 +1,5 @@
- admin sudah ada seeder nya jadinya bisa ke terminal lalu paste ini
+nama folder : kio_store_laravel
+adminahudah ada seeder nya jadinya bisa ke terminal lalu paste ini
 php artisan db:seed --class=AdminSeeder
 lalu enter maka akun Admin otomatis terbuat,lalu akun admin dan pw nya adalah
 admin@gmail.com pw : password
