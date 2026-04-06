@@ -1,4 +1,4 @@
-pword admin sudah ada seeder nya jadinya bisa ke terminal lalu paste ini
+ admin sudah ada seeder nya jadinya bisa ke terminal lalu paste ini
 php artisan db:seed --class=AdminSeeder
 lalu enter maka akun Admin otomatis terbuat,lalu akun admin dan pw nya adalah
 admin@gmail.com pw : password
