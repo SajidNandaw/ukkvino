@@ -36,7 +36,6 @@ use App\Http\Controllers\User\RatingController;
 */
 Route::get('/', fn() => redirect()->route('login'));
 
-
 /*
 |--------------------------------------------------------------------------
 | AUTH
@@ -52,7 +51,6 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/logout','logout')->name('logout');
 });
 
-
 /*
 |--------------------------------------------------------------------------
 | REDIRECT DASHBOARD
@@ -66,7 +64,6 @@ Route::get('/dashboard', function () {
 
     return redirect()->route('user.dashboard');
 })->middleware('auth');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -106,6 +103,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/user/update/{id}',[UserController::class,'update'])->name('admin.user.update');
         Route::delete('/user/hapus/{id}',[UserController::class,'destroy'])->name('admin.user.destroy');
 
+        /* 🔥 TAMBAHAN NONAKTIF / AKTIFKAN USER */
+        Route::post('/user/nonaktif/{id}',[UserController::class,'nonaktif'])->name('admin.user.nonaktif');
+        Route::post('/user/aktifkan/{id}',[UserController::class,'aktifkan'])->name('admin.user.aktifkan');
+
         /* BACKUP */
         Route::get('/backup',[BackupController::class,'index'])->name('admin.backup');
         Route::get('/backup/restore/{id}',[BackupController::class,'restore'])->name('admin.backup.restore');
@@ -116,7 +117,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/laporan/chart-data',[LaporanController::class,'chartData'])->name('admin.laporan.chart');
         Route::get('/laporan/download/{type}',[LaporanController::class,'download'])->name('admin.laporan.download');
     });
-
 
     /*
     |--------------------------------------------------------------------------
@@ -137,6 +137,9 @@ Route::middleware('auth')->group(function () {
 
         /* USER */
         Route::get('/user',[PetugasUserController::class,'index'])->name('petugas.user.index');
+        Route::get('/user/edit/{id}', [PetugasUserController::class,'edit'])->name('petugas.user.edit'); // Tambahan fix
+        Route::post('/user/update/{id}', [PetugasUserController::class,'update'])->name('petugas.user.update'); // Tambahan fix
+        Route::post('/user/nonaktif/{id}',[PetugasUserController::class,'nonaktif'])->name('petugas.user.nonaktif');
 
         /* PESANAN */
         Route::get('/pesanan',[PesananController::class,'index'])->name('petugas.pesanan.index');
@@ -150,7 +153,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/laporan/chart-data',[PetugasLaporanController::class,'chartData'])->name('petugas.laporan.chart');
         Route::get('/laporan/download/{type}',[PetugasLaporanController::class,'download'])->name('petugas.laporan.download');
     });
-
 
     /*
     |--------------------------------------------------------------------------
@@ -190,15 +192,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/pembayaran/{id}',[PembayaranController::class,'index'])->name('pembayaran');
         Route::post('/pembayaran/upload',[PembayaranController::class,'upload'])->name('pembayaran.upload');
 
-        /* RIWAYAT (FIX FINAL) */
+        /* RIWAYAT */
         Route::get('/riwayat',[RiwayatController::class,'index'])->name('user.riwayat');
         Route::get('/riwayat/{id}',[RiwayatController::class,'detail'])->name('user.detail.pesanan');
 
-        /* 🔥 BATAL PESANAN (WAJIB ADA) */
         Route::get('/batal/pesanan/{id}',[RiwayatController::class,'batal'])
             ->name('user.batal.pesanan');
 
-        /* STATIC PAGE */
         Route::view('/tentang-kami','user.tentang_kami');
         Route::view('/metode-pembayaran','user.metode_pembayaran');
         Route::view('/cara-belanja','user.cara_belanja');

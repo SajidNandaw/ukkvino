@@ -10,25 +10,25 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-
+    // Tampilkan semua user
     public function index(Request $request)
     {
         $search = $request->search;
 
         $users = User::where('role','user')
-        ->when($search,function($query,$search){
-            return $query->where(function($q) use ($search){
-                $q->where('name','like',"%$search%")
-                  ->orWhere('email','like',"%$search%");
-            });
-        })
-        ->orderBy('id','desc')
-        ->get();
+            ->when($search,function($query,$search){
+                return $query->where(function($q) use ($search){
+                    $q->where('name','like',"%$search%")
+                      ->orWhere('email','like',"%$search%");
+                });
+            })
+            ->orderBy('id','desc')
+            ->get();
 
         return view('admin.user.index',compact('users','search'));
     }
 
-
+    // Form edit user
     public function edit($id)
     {
         $user = User::findOrFail($id);
@@ -36,10 +36,9 @@ class UserController extends Controller
         return view('admin.user.edit',compact('user'));
     }
 
-
+    // Update data user (termasuk status aktif/nonaktif)
     public function update(Request $request,$id)
     {
-
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$id,
@@ -54,11 +53,12 @@ class UserController extends Controller
             'status' => $request->status
         ]);
 
-        return redirect()->route('user.index')
-        ->with('success','User berhasil diupdate');
+        // Redirect pakai route yang benar
+        return redirect()->route('admin.user.index')
+            ->with('success','User berhasil diupdate');
     }
 
-
+    // Hapus user dan backup data
     public function destroy($id)
     {
         $user = User::findOrFail($id);
@@ -77,8 +77,7 @@ class UserController extends Controller
 
         $user->delete();
 
-        return redirect()->back()
-        ->with('success','User berhasil dihapus dan dibackup');
+        return redirect()->route('admin.user.index')
+            ->with('success','User berhasil dihapus dan dibackup');
     }
-
 }

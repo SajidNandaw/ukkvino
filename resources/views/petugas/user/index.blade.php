@@ -130,42 +130,31 @@ border-radius:6px;font-size:12px;border:none;cursor:pointer;
 
 <div class="menu">
 <ul>
-
 <li>
-<a href="{{ route('petugas.dashboard') }}"
-class="{{ request()->is('petugas/dashboard') ? 'active' : '' }}">
+<a href="{{ route('petugas.dashboard') }}" class="{{ request()->is('petugas/dashboard') ? 'active' : '' }}">
 Dashboard
 </a>
 </li>
-
 <li>
-<a href="{{ route('petugas.produk.index') }}"
-class="{{ request()->is('petugas/produk*') ? 'active' : '' }}">
+<a href="{{ route('petugas.produk.index') }}" class="{{ request()->is('petugas/produk*') ? 'active' : '' }}">
 Produk
 </a>
 </li>
-
 <li>
-<a href="{{ route('petugas.user.index') }}"
-class="{{ request()->is('petugas/user*') ? 'active' : '' }}">
+<a href="{{ route('petugas.user.index') }}" class="{{ request()->is('petugas/user*') ? 'active' : '' }}">
 User
 </a>
 </li>
-
 <li>
-<a href="{{ route('petugas.pesanan.index') }}"
-class="{{ request()->is('petugas/pesanan*') ? 'active' : '' }}">
+<a href="{{ route('petugas.pesanan.index') }}" class="{{ request()->is('petugas/pesanan*') ? 'active' : '' }}">
 Pesanan
 </a>
 </li>
-
 <li>
-<a href="{{ route('petugas.laporan.index') }}"
-class="{{ request()->is('petugas/laporan*') ? 'active' : '' }}">
+<a href="{{ route('petugas.laporan.index') }}" class="{{ request()->is('petugas/laporan*') ? 'active' : '' }}">
 Laporan
 </a>
 </li>
-
 </ul>
 </div>
 
@@ -195,16 +184,13 @@ Laporan
 <div class="card">
 
 <div class="header-card">
-
 <form method="GET">
 <input type="text" name="search" class="search-box"
 placeholder="Cari User..." value="{{ $search }}">
 </form>
-
 </div>
 
 <table>
-
 <tr>
 <th>Nama</th>
 <th>Email</th>
@@ -213,23 +199,15 @@ placeholder="Cari User..." value="{{ $search }}">
 </tr>
 
 @if($users->count() == 0)
-
 <tr>
-<td colspan="4" class="no-data">
-User tidak ditemukan
-</td>
+<td colspan="4" class="no-data">User tidak ditemukan</td>
 </tr>
-
 @endif
 
 @foreach($users as $row)
-
 <tr>
-
 <td>{{ $row->name }}</td>
-
 <td>{{ $row->email }}</td>
-
 <td>
 @if($row->status == "aktif")
 <span class="badge badge-active">Aktif</span>
@@ -237,29 +215,16 @@ User tidak ditemukan
 <span class="badge badge-nonactive">Nonaktif</span>
 @endif
 </td>
-
 <td>
-
-<a href="/petugas/user/{{ $row->id }}/edit" class="btn-edit">
-Edit
-</a>
+<a href="{{ route('petugas.user.edit', $row->id) }}" class="btn-edit">Edit</a>
 
 <form action="/petugas/user/{{ $row->id }}" method="POST" style="display:inline">
-
 @csrf
 @method('DELETE')
-
-<button onclick="return confirm('Yakin hapus user ini?')"
-class="btn-delete">
-Hapus
-</button>
-
+<button onclick="return confirm('Yakin hapus user ini?')" class="btn-delete">Hapus</button>
 </form>
-
 </td>
-
 </tr>
-
 @endforeach
 
 </table>

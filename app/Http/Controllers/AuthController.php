@@ -9,7 +9,6 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-
     /*
     |--------------------------------------------------------------------------
     | LOGIN PAGE
@@ -20,7 +19,6 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | PROSES LOGIN
@@ -28,7 +26,6 @@ class AuthController extends Controller
     */
     public function loginPost(Request $request)
     {
-
         $request->validate([
             'email' => 'required|email',
             'password' => 'required'
@@ -37,31 +34,30 @@ class AuthController extends Controller
         $credentials = $request->only('email','password');
 
         if(Auth::attempt($credentials)){
-
             $user = Auth::user();
 
-            /* ===== CEK STATUS USER ===== */
+            // CEK STATUS USER
             if($user->status !== 'aktif'){
                 Auth::logout();
-                return back()->with('error','Akun anda dinonaktifkan');
+                // GANTI back() jadi redirect login biar CSRF token aman
+                return redirect()->route('login')
+                                 ->with('error','Akun anda dinonaktifkan');
             }
 
-            /* ===== REDIRECT ROLE ===== */
+            // REDIRECT ROLE
             if($user->role == 'admin'){
-                return redirect('/admin/dashboard');
+                return redirect()->route('admin.dashboard');
             }
 
             if($user->role == 'petugas'){
-                return redirect('/petugas/dashboard');
+                return redirect()->route('petugas.dashboard');
             }
 
-            return redirect('/user/dashboard');
-
+            return redirect()->route('user.dashboard');
         }
 
-        return back()->with('error','Email atau password salah');
+        return redirect()->route('login')->with('error','Email atau password salah');
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -73,7 +69,6 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | PROSES REGISTER
@@ -81,7 +76,6 @@ class AuthController extends Controller
     */
     public function registerPost(Request $request)
     {
-
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
@@ -97,9 +91,8 @@ class AuthController extends Controller
             'status' => 'aktif'
         ]);
 
-        return redirect('/login')->with('success','Registrasi berhasil, silahkan login');
+        return redirect()->route('login')->with('success','Registrasi berhasil, silahkan login');
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +102,6 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        return redirect('/login');
+        return redirect()->route('login');
     }
-
 }

@@ -10,7 +10,6 @@
 body{display:flex;background:#f1f5f9;}
 
 /* SIDEBAR */
-
 .sidebar{
 width:220px;
 background:#fff;
@@ -78,7 +77,6 @@ color:#1d4ed8;
 }
 
 /* LOGOUT */
-
 .logout{
 background:black;
 color:white;
@@ -93,7 +91,6 @@ width:100%;
 }
 
 /* MAIN */
-
 .main{
 margin-left:220px;
 padding:30px;
@@ -126,7 +123,6 @@ font-weight:bold;
 }
 
 /* FORM */
-
 .form-box{
 background:white;
 padding:30px;
@@ -198,31 +194,24 @@ font-size:13px;
 
 <div class="menu">
 <ul>
-
 <li>
 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
 </li>
-
 <li>
-<a href="{{ route('produk.index') }}">Produk</a>
+<a href="{{ route('admin.produk.index') }}">Produk</a>
 </li>
-
 <li>
-<a href="{{ route('petugas.index') }}">Petugas</a>
+<a href="{{ route('admin.petugas.index') }}">Petugas</a>
 </li>
-
 <li>
 <a href="{{ route('admin.backup') }}">Backup</a>
 </li>
-
 <li>
-<a href="{{ route('user.index') }}" class="active">User</a>
+<a href="{{ route('admin.user.index') }}" class="active">User</a>
 </li>
-
 <li>
 <a href="">Laporan</a>
 </li>
-
 </ul>
 </div>
 
@@ -239,29 +228,24 @@ Log out
 <div class="main">
 
 <div class="topbar">
-
 <h2>Edit User</h2>
 
 <div class="profile">
-
 <span>Hei, {{ auth()->user()->name }} 👋</span>
-
 <div class="profile-circle">
 {{ strtoupper(substr(auth()->user()->name,0,2)) }}
 </div>
-
 </div>
 
 </div>
 
-<a href="{{ route('user.index') }}" class="btn-back">
+<a href="{{ route('admin.user.index') }}" class="btn-back">
 ← Kembali
 </a>
 
 <div class="form-box">
 
-<form action="{{ route('user.update',$user->id) }}" method="POST">
-
+<form action="{{ route('admin.user.update', $user->id) }}" method="POST">
 @csrf
 
 <label>Nama</label>
@@ -271,23 +255,12 @@ Log out
 <input type="email" name="email" value="{{ $user->email }}" required>
 
 <label>Status</label>
-
 <select name="status">
-
-<option value="aktif" {{ $user->status == 'aktif' ? 'selected' : '' }}>
-Aktif
-</option>
-
-<option value="nonaktif" {{ $user->status == 'nonaktif' ? 'selected' : '' }}>
-Nonaktif
-</option>
-
+<option value="aktif" {{ $user->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
+<option value="nonaktif" {{ $user->status == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
 </select>
 
-<button type="submit" class="btn-update">
-Update User
-</button>
-
+<button type="submit" class="btn-update">Update User</button>
 </form>
 
 </div>

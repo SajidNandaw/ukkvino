@@ -11,120 +11,104 @@ use App\Models\BackupData;
 class PetugasController extends Controller
 {
 
-public function index(Request $request)
-{
+    public function index(Request $request)
+    {
+        $p = 'petugas';
+        $search = $request->search;
 
-$p = 'petugas';
+        $petugas = User::where('role','petugas')
+        ->when($search,function($query,$search){
+            $query->where(function($q) use ($search){
+                $q->where('name','like',"%$search%")
+                  ->orWhere('email','like',"%$search%");
+            });
+        })
+        ->orderBy('id','desc')
+        ->get();
 
-$search = $request->search;
-
-$petugas = User::where('role','petugas')
-->when($search,function($query,$search){
-
-$query->where(function($q) use ($search){
-
-$q->where('name','like',"%$search%")
-->orWhere('email','like',"%$search%");
-
-});
-
-})
-->orderBy('id','desc')
-->get();
-
-return view('admin.petugas.index',compact('petugas','p'));
-
-}
+        return view('admin.petugas.index',compact('petugas','p'));
+    }
 
 
-public function create()
-{
-
-$p = 'petugas';
-
-return view('admin.petugas.tambah',compact('p'));
-
-}
+    public function create()
+    {
+        $p = 'petugas';
+        return view('admin.petugas.tambah',compact('p'));
+    }
 
 
-public function store(Request $request)
-{
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name'=>'required',
+            'email'=>'required|email|unique:users,email',
+            'password'=>'required|min:6'
+        ]);
 
-$request->validate([
-'name'=>'required',
-'email'=>'required|email|unique:users,email',
-'password'=>'required|min:6'
-]);
+        User::create([
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'password'=>bcrypt($request->password),
+            'role'=>'petugas',
+            'status'=>'aktif' // 🔥 default aktif
+        ]);
 
-User::create([
-'name'=>$request->name,
-'email'=>$request->email,
-'password'=>bcrypt($request->password),
-'role'=>'petugas',
-'status'=>'aktif'
-]);
-
-return redirect('/admin/petugas');
-
-}
+        return redirect('/admin/petugas');
+    }
 
 
-public function edit($id)
-{
+    public function edit($id)
+    {
+        $p = 'petugas';
+        $petugas = User::findOrFail($id);
 
-$p = 'petugas';
-
-$petugas = User::findOrFail($id);
-
-return view('admin.petugas.edit',compact('petugas','p'));
-
-}
+        return view('admin.petugas.edit',compact('petugas','p'));
+    }
 
 
-public function update(Request $request,$id)
-{
+    public function update(Request $request,$id)
+    {
+        $petugas = User::findOrFail($id);
 
-$petugas = User::findOrFail($id);
+        $request->validate([
+            'name'=>'required',
+            'email'=>"required|email|unique:users,email,$id",
+            'status'=>'required|in:aktif,nonaktif' // 🔥 VALIDASI TAMBAHAN
+        ]);
 
-$request->validate([
-'name'=>'required',
-'email'=>"required|email|unique:users,email,$id"
-]);
+        $data = [
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'status'=>$request->status // 🔥 ini inti nonaktif
+        ];
 
-$data=[
-'name'=>$request->name,
-'email'=>$request->email,
-'status'=>$request->status
-];
+        if($request->password){
+            $data['password'] = bcrypt($request->password);
+        }
 
-if($request->password){
-$data['password']=bcrypt($request->password);
-}
+        $petugas->update($data);
 
-$petugas->update($data);
-
-return redirect('/admin/petugas');
-
-}
+        return redirect('/admin/petugas')
+        ->with('success','Data petugas berhasil diupdate');
+    }
 
 
-public function destroy($id)
-{
+    public function destroy($id)
+    {
+        $petugas = User::findOrFail($id);
 
-$petugas = User::findOrFail($id);
+        BackupData::create([
+            'original_id'=>$petugas->id,
+            'table_name'=>'users',
+            'data_backup'=>json_encode($petugas->makeVisible('password')->toArray()),
+            'deleted_by'=>Auth::user()->name,
+            'deleted_at'=>now()
+        ]);
 
-BackupData::create([
-'original_id'=>$petugas->id,
-'table_name'=>'users',
-'data_backup'=>json_encode($petugas->makeVisible('password')->toArray()),
-'deleted_by'=>Auth::user()->name,
-'deleted_at'=>now()
-]);
+        $petugas->delete();
 
-$petugas->delete();
-
-return redirect()->back();
-
-}
+        return redirect()->back()
+        ->with('success','Petugas berhasil dihapus dan dibackup');
+    }
 
 }
