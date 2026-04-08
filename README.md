@@ -1,18 +1,24 @@
-nama folder : kio_store_laravel
+Nama folder : kio_store_laravel
 
+Untuk DB saya pakai migration,dan taruh ini di terminal lalu enter maka db nya akan terbuat
+php artisan migrate
 
+ADMIN
 admin ada seeder nya jadinya bisa ke terminal lalu paste ini
 php artisan db:seed --class=AdminSeeder
 lalu enter maka akun Admin otomatis terbuat,lalu akun admin dan pw nya adalah
 admin@gmail.com pw : password
 
-
+PETUGAS
 Petugas bisa dibuat manual setelah masuk ke halaman admin, nanti ada halaman manajemen petugas,disana bisa membuat akun petugas contoh : petugas@gmail.com pw : password
 
-
+USER
 user juga sama harus dibuat manual,tapi di halaman register,buatlah akun user dengan contoh : user@gmail.com pw : password
 
-disini saya memakai framework laravel
+Di Project ini saya memakai framework laravel 12
+
+Untuk Menjalankan server :
+php artisan serve 
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
