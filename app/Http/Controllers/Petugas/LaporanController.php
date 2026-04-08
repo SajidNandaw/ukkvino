@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Petugas;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class LaporanController extends Controller
 {
@@ -31,31 +32,112 @@ class LaporanController extends Controller
         ->get();
 
 
-        $totalTerjual = DB::table('detail_transaksi')->sum('qty');
+        $totalTerjual = DB::table('detail_transaksi')
+        ->sum('qty');
 
 
-        return view('petugas.laporan.index',compact(
+        return view('admin.laporan.index',compact(
             'penjualan',
             'stok',
             'totalTerjual'
         ));
+    }
+
+
+    public function chartData()
+    {
+
+        $data = DB::table('transaksi')
+        ->select(
+            DB::raw('DATE(tanggal) as tgl'),
+            DB::raw('SUM(total) as total')
+        )
+        ->groupBy(DB::raw('DATE(tanggal)'))
+        ->orderBy('tgl','ASC')
+        ->get();
+
+
+        $labels = [];
+        $values = [];
+
+        foreach($data as $row){
+            $labels[] = $row->tgl;
+            $values[] = $row->total;
+        }
+
+
+        return response()->json([
+            'labels'=>$labels,
+            'data'=>$values
+        ]);
 
     }
+
 
     public function download($type)
-{
-    // contoh sederhana: cek type dan generate file
-    if($type == 'penjualan'){
-        // logika generate laporan penjualan, misal CSV atau PDF
-        return response()->download(storage_path('app/laporan_penjualan.xlsx'));
-    } elseif($type == 'stok'){
-        return response()->download(storage_path('app/laporan_stok.xlsx'));
-    } elseif ($type == 'grafik') {
-        return response()->download(storage_path('app/laporan_grafik.xlsx'));
-    } else {
-        abort(404, 'Tipe laporan tidak ditemukan');
-    }
-}
+    {
 
+        $filename = $type.".csv";
+
+        $headers = [
+            "Content-type"=>"text/csv",
+            "Content-Disposition"=>"attachment; filename=$filename",
+        ];
+
+        $callback = function() use ($type){
+
+            $output = fopen('php://output','w');
+
+            if($type == "penjualan"){
+
+                fputcsv($output,['ID','Tanggal','Pembeli','Total']);
+
+                $data = DB::table('transaksi')
+                ->join('users','transaksi.user_id','=','users.id')
+                ->select('transaksi.id','transaksi.tanggal','users.name','transaksi.total')
+                ->get();
+
+                foreach($data as $row){
+                    fputcsv($output,(array)$row);
+                }
+            }
+
+
+            if($type == "stok"){
+
+                fputcsv($output,['Produk','Stok']);
+
+                $data = DB::table('produk')->select('nama','stok')->get();
+
+                foreach($data as $row){
+                    fputcsv($output,(array)$row);
+                }
+            }
+
+
+            if($type == "grafik"){
+
+                fputcsv($output,['Tanggal','Total']);
+
+                $data = DB::table('transaksi')
+                ->select(
+                    DB::raw('DATE(tanggal) as tanggal'),
+                    DB::raw('SUM(total) as total')
+                )
+                ->groupBy(DB::raw('DATE(tanggal)'))
+                ->get();
+
+                foreach($data as $row){
+                    fputcsv($output,(array)$row);
+                }
+
+            }
+
+            fclose($output);
+        };
+
+        return response()->stream($callback,200,$headers);
+
+    }
 
 }
