@@ -165,8 +165,8 @@ width:350px;
 <div class="shipping">
 <h3>Informasi Pengiriman</h3>
 <p>Subtotal : Rp {{ number_format($produk->harga) }}</p>
-<p>Ongkos Kirim : Rp 20.000</p>
-<p><strong>Total : Rp {{ number_format($produk->harga + 20000) }}</strong></p>
+<p>Ongkos Kirim : Rp 10.000</p>
+<p><strong>Total : Rp {{ number_format($produk->harga + 10000) }}</strong></p>
 </div>
 
 </div>
