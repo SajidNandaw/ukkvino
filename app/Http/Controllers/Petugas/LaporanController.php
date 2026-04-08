@@ -42,4 +42,20 @@ class LaporanController extends Controller
 
     }
 
+    public function download($type)
+{
+    // contoh sederhana: cek type dan generate file
+    if($type == 'penjualan'){
+        // logika generate laporan penjualan, misal CSV atau PDF
+        return response()->download(storage_path('app/laporan_penjualan.xlsx'));
+    } elseif($type == 'stok'){
+        return response()->download(storage_path('app/laporan_stok.xlsx'));
+    } elseif ($type == 'grafik') {
+        return response()->download(storage_path('app/laporan_grafik.xlsx'));
+    } else {
+        abort(404, 'Tipe laporan tidak ditemukan');
+    }
+}
+
+
 }

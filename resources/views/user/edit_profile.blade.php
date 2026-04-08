@@ -235,7 +235,7 @@ font-size:14px;
 <p><a href="/user/cara-belanja">Cara Belanja</a></p>
 <p><a href="/user/metode-pembayaran">Metode Pembayaran</a></p>
 <p><a href="/user/pengiriman">Pengiriman</a></p>
-<p><a href="/user/syarat-ketentuan">Syarat & Ketentuan</a></p>
+<p><a href="/user/syarat_ketentuan">Syarat & Ketentuan</a></p>
 </div>
 
 <div>

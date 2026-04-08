@@ -3,56 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <title>Ubah Password - KioStore</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+html{scroll-behavior:smooth;}
+body{background:#e6edf5;}
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
-
-body{
-background:#e6edf5;
-}
+a{text-decoration:none;color:inherit;}
 
 /* HEADER */
-
 header{
 background:#8FAFD6;
 padding:15px 60px;
 display:flex;
+align-items:center;
 justify-content:space-between;
-align-items:center;
 }
 
-.logo-area{
-display:flex;
-align-items:center;
-gap:10px;
-}
+.logo-area{display:flex;align-items:center;gap:10px;}
+.logo-area img{width:45px;}
+.logo-text{font-size:22px;font-weight:700;color:#2A5CAA;}
 
-.logo-area img{
-width:45px;
-}
-
-.logo-text{
-font-size:22px;
-font-weight:700;
-color:#2A5CAA;
-}
-
-.header-icons{
-font-size:22px;
-display:flex;
-gap:20px;
+.header-icons{display:flex;align-items:center;gap:25px;font-size:22px;}
+.cart-icon{position:relative;text-decoration:none;color:black;}
+.cart-badge{
+position:absolute;
+top:-8px;
+right:-12px;
+background:red;
+color:white;
+font-size:11px;
+padding:2px 6px;
+border-radius:50%;
 }
 
 /* CONTAINER */
-
 .container{
 width:500px;
 margin:auto;
@@ -60,7 +48,6 @@ margin-top:80px;
 }
 
 /* CARD */
-
 .card{
 background:white;
 padding:35px;
@@ -99,9 +86,7 @@ cursor:pointer;
 font-weight:500;
 }
 
-button:hover{
-opacity:0.9;
-}
+button:hover{opacity:0.9;}
 
 .back{
 display:inline-block;
@@ -114,11 +99,9 @@ border-radius:8px;
 }
 
 /* FOOTER */
-
 footer{
 background:#8FAFD6;
 padding:50px 60px 30px;
-margin-top:80px;
 }
 
 .footer-grid{
@@ -132,34 +115,42 @@ font-weight:700;
 margin-bottom:12px;
 }
 
-.footer-grid p{
+.footer-grid p,
+.footer-grid a{
 font-size:14px;
 margin-bottom:6px;
+color:black;
+text-decoration:none;
 }
 
 .footer-bottom{
+background:#4E8EDB;
+color:white;
 text-align:center;
-margin-top:25px;
+padding:18px;
 font-size:14px;
 }
-
 </style>
 </head>
 
 <body>
 
 <header>
-
 <div class="logo-area">
 <img src="{{ asset('uploads/assets/blue 2.png') }}">
 <div class="logo-text">KioStore</div>
 </div>
 
 <div class="header-icons">
-<a href="{{ route('keranjang') }}">🛒</a>
-<a href="{{ route('user.profile') }}">👤</a>
-</div>
+<a href="{{ route('keranjang') }}" class="cart-icon">
+🛒
+@if($totalCart > 0)
+<span class="cart-badge">{{ $totalCart }}</span>
+@endif
+</a>
 
+<a href="{{ route('user.profile') }}" class="cart-icon">👤</a>
+</div>
 </header>
 
 <div class="container">
@@ -187,7 +178,6 @@ font-size:14px;
 @endif
 
 <form action="{{ route('user.password.update') }}" method="POST">
-
 @csrf
 
 <label>Password Lama</label>
@@ -200,15 +190,13 @@ font-size:14px;
 <input type="password" name="konfirmasi_password" required>
 
 <button type="submit">Ubah Password</button>
-
 </form>
 
 </div>
-
 </div>
 
+<!-- FOOTER -->
 <footer>
-
 <div class="footer-grid">
 
 <div>
@@ -218,16 +206,17 @@ font-size:14px;
 
 <div>
 <div class="footer-title">Layanan</div>
-<p>Tentang Kami</p>
-<p>Produk</p>
-<p>Keranjang</p>
+<p><a href="/user/tentang-kami">Tentang Kami</a></p>
+<p><a href="{{ route('user.dashboard') }}">Produk</a></p>
+<p><a href="{{ route('keranjang') }}">Keranjang</a></p>
 </div>
 
 <div>
 <div class="footer-title">Bantuan</div>
-<p>Cara Belanja</p>
-<p>Metode Pembayaran</p>
-<p>Pengiriman</p>
+<p><a href="/user/cara-belanja">Cara Belanja</a></p>
+<p><a href="/user/metode_pembayaran">Metode Pembayaran</a></p>
+<p><a href="/user/pengiriman">Pengiriman</a></p>
+<p><a href="/user/syarat_ketentuan">Syarat & Ketentuan</a></p>
 </div>
 
 <div>
@@ -238,12 +227,11 @@ font-size:14px;
 </div>
 
 </div>
+</footer>
 
 <div class="footer-bottom">
 © KioStore 2026. All Rights Reserved.
 </div>
-
-</footer>
 
 </body>
 </html>

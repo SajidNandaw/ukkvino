@@ -224,13 +224,13 @@ Rp {{ number_format($p->subtotal) }}
 
 <hr>
 
-<div>Ongkir : Rp 20.000</div>
+<div>Ongkir : Rp 10.000</div>
 <div>Subtotal Produk : Rp {{ number_format($total_produk) }}</div>
 
 <hr>
 
 <div class="total">
-Total : Rp {{ number_format($total_produk + 20000) }}
+Total : Rp {{ number_format($total_produk + 10000) }}
 </div>
 
 </div>

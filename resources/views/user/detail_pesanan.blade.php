@@ -146,14 +146,14 @@
 
                 <div class="row">
                     <span>Ongkos Kirim</span>
-                    <span>Rp 20.000</span>
+                    <span>Rp 10.000</span>
                 </div>
 
                 <hr>
                 <br>
                 <div class="row">
                     <b>Total</b>
-                    <b>Rp {{ number_format($total+20000) }}</b>
+                    <b>Rp {{ number_format($total+10000) }}</b>
                 </div>
             </div>
 
@@ -163,7 +163,7 @@
             </div>
 
             @if($transaksi->metode == 'transfer' && $transaksi->status == 'pending' && empty($transaksi->bukti))
-                <a href="/pembayaran/show/{{ $transaksi->id }}" class="btn pay-btn">Lanjut ke Pembayaran</a>
+                <a href="{{ route('pembayaran', $transaksi->id) }}" class="btn pay-btn">Lanjut ke Pembayaran</a>
             @endif
 
         </div>

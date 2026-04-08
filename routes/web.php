@@ -28,13 +28,19 @@ use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\User\PembayaranController;
 use App\Http\Controllers\User\RiwayatController;
 use App\Http\Controllers\User\RatingController;
+use App\Http\Controllers\PageController;
+
+/* PUBLIC KATALOG */
+use App\Http\Controllers\PublicController;
 
 /*
 |--------------------------------------------------------------------------
-| HALAMAN AWAL
+| HALAMAN AWAL / KATALOG PUBLIK
 |--------------------------------------------------------------------------
+| Semua orang yang buka website langsung melihat katalog
 */
-Route::get('/', fn() => redirect()->route('login'));
+Route::get('/', [PublicController::class, 'index'])->name('public.katalog');
+Route::get('/produk/{id}', [PublicController::class, 'show'])->name('produk.detail'); // ✅ Tambahan untuk detail.blade.php
 
 /*
 |--------------------------------------------------------------------------
@@ -103,7 +109,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/user/update/{id}',[UserController::class,'update'])->name('admin.user.update');
         Route::delete('/user/hapus/{id}',[UserController::class,'destroy'])->name('admin.user.destroy');
 
-        /* 🔥 TAMBAHAN NONAKTIF / AKTIFKAN USER */
+        /* NONAKTIF / AKTIFKAN USER */
         Route::post('/user/nonaktif/{id}',[UserController::class,'nonaktif'])->name('admin.user.nonaktif');
         Route::post('/user/aktifkan/{id}',[UserController::class,'aktifkan'])->name('admin.user.aktifkan');
 
@@ -137,8 +143,8 @@ Route::middleware('auth')->group(function () {
 
         /* USER */
         Route::get('/user',[PetugasUserController::class,'index'])->name('petugas.user.index');
-        Route::get('/user/edit/{id}', [PetugasUserController::class,'edit'])->name('petugas.user.edit'); // Tambahan fix
-        Route::post('/user/update/{id}', [PetugasUserController::class,'update'])->name('petugas.user.update'); // Tambahan fix
+        Route::get('/user/edit/{id}', [PetugasUserController::class,'edit'])->name('petugas.user.edit');
+        Route::post('/user/update/{id}', [PetugasUserController::class,'update'])->name('petugas.user.update');
         Route::post('/user/nonaktif/{id}',[PetugasUserController::class,'nonaktif'])->name('petugas.user.nonaktif');
 
         /* PESANAN */
@@ -191,19 +197,18 @@ Route::middleware('auth')->group(function () {
         /* PEMBAYARAN */
         Route::get('/pembayaran/{id}',[PembayaranController::class,'index'])->name('pembayaran');
         Route::post('/pembayaran/upload',[PembayaranController::class,'upload'])->name('pembayaran.upload');
+        
 
         /* RIWAYAT */
         Route::get('/riwayat',[RiwayatController::class,'index'])->name('user.riwayat');
         Route::get('/riwayat/{id}',[RiwayatController::class,'detail'])->name('user.detail.pesanan');
-
-        Route::get('/batal/pesanan/{id}',[RiwayatController::class,'batal'])
-            ->name('user.batal.pesanan');
+        Route::get('/batal/pesanan/{id}',[RiwayatController::class,'batal'])->name('user.batal.pesanan');
 
         Route::view('/tentang-kami','user.tentang_kami');
         Route::view('/metode-pembayaran','user.metode_pembayaran');
         Route::view('/cara-belanja','user.cara_belanja');
         Route::view('/pengiriman','user.pengiriman');
-        Route::view('/syarat-ketentuan','user.syarat_ketentuan');
+        Route::view('/syarat_ketentuan','user.syarat_ketentuan');
     });
 
 });

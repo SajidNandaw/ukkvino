@@ -217,18 +217,15 @@ font-size:14px;
 
 @php
 $status = strtolower(trim($row->status));
-
-// mapping semua kemungkinan
 if($status == 'menunggu') $status = 'pending';
 if($status == 'proses') $status = 'dibayar';
 if($status == 'kirim') $status = 'dikirim';
 if($status == 'batal') $status = 'dibatalkan';
-
-// 🔥 kalau tidak dikenal → jadi diproses
 $allowed = ['pending','dibayar','dikirim','selesai','dibatalkan'];
-if(!in_array($status, $allowed)){
-    $status = 'dibayar';
-}
+if(!in_array($status, $allowed)) $status='dibayar';
+
+$ongkir_per_produk = 10000;
+$total_ongkir = $ongkir_per_produk * $row->qty;
 @endphp
 
 <div class="order-card" data-status="{{ $status }}" data-date="{{ $row->tanggal }}">
@@ -240,7 +237,8 @@ if(!in_array($status, $allowed)){
 <div class="order-info">
 <b>#{{ $row->id }}</b><br>
 {{ \Carbon\Carbon::parse($row->tanggal)->translatedFormat('d F Y') }}<br>
-{{ $row->nama }} x {{ $row->qty }}
+{{ $row->nama }} x {{ $row->qty }}<br>
+Ongkir: Rp {{ number_format($total_ongkir) }}
 
 <br><br>
 
@@ -252,43 +250,31 @@ if(!in_array($status, $allowed)){
 </div>
 
 <div class="order-total">
-Total Rp {{ number_format($row->total) }}
+Total Rp {{ number_format($row->total + $total_ongkir) }}
 </div>
 
 </div>
 
 <div>
-
 @if($status == "pending")
 <span class="status pending">Menunggu</span>
-
 @elseif($status == "dibayar")
 <span class="status dibayar">Diproses</span>
-
 @elseif($status == "dikirim")
 <span class="status dikirim">Dikirim</span>
-
 @elseif($status == "selesai")
 <span class="status selesai">Selesai</span>
-
 @elseif($status == "dibatalkan")
 <span class="status dibatalkan">Dibatalkan</span>
 @endif
 
 <br><br>
 
-<a href="{{ route('user.detail.pesanan', $row->id) }}" class="detail-btn">
-Detail >
-</a>
+<a href="{{ route('user.detail.pesanan', $row->id) }}" class="detail-btn">Detail ></a>
 
 @if(in_array($status, ['pending','dibayar']))
-<a href="{{ route('user.batal.pesanan', $row->id) }}"
-   class="cancel-btn"
-   onclick="return confirm('Yakin batalkan pesanan?')">
-   Batalkan
-</a>
+<a href="{{ route('user.batal.pesanan', $row->id) }}" class="cancel-btn" onclick="return confirm('Yakin batalkan pesanan?')">Batalkan</a>
 @endif
-
 </div>
 
 </div>
@@ -316,9 +302,9 @@ Detail >
 <div>
 <div class="footer-title">Bantuan</div>
 <p><a href="/user/cara-belanja">Cara Belanja</a></p>
-<p><a href="/user/metode-pembayaran">Metode Pembayaran</a></p>
+<p><a href="/user/metode_pembayaran">Metode Pembayaran</a></p>
 <p><a href="/user/pengiriman">Pengiriman</a></p>
-<p><a href="/user/syarat-ketentuan">Syarat & Ketentuan</a></p>
+<p><a href="/user/syarat_ketentuan">Syarat & Ketentuan</a></p>
 </div>
 
 <div>

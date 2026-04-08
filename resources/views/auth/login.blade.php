@@ -41,6 +41,25 @@ body{
     color:#2d7cff;
 }
 
+/* Tombol Kembali di kiri atas */
+.back-btn-left{
+    position:absolute;
+    top:100px;
+    left:50px;
+    display:inline-block;
+    padding:10px 18px;
+    background:#f1f1f1;
+    color:#2d7cff;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.back-btn-left:hover{
+    background:#dbe6f8;
+}
+
 .left-content{
     text-align:center;
 }
@@ -131,6 +150,9 @@ button{
 <div class="left">
 
 <div class="brand-top">KioStore</div>
+
+<!-- Tombol Kembali ke Katalog di kiri -->
+<a href="{{ route('public.katalog') }}" class="back-btn-left">← Kembali ke Beranda Produk</a>
 
 <div class="left-content">
 <img src="{{ asset('uploads/assets/blue 2.png') }}">

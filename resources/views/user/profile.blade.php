@@ -339,7 +339,7 @@ font-size:14px;
 <div>
 <div class="footer-title">Layanan</div>
 <p><a href="/user/tentang-kami">Tentang Kami</a></p>
-<p><a href="{{ route('user.produk') }}">Produk</a></p>
+<p><a href="/user/dashboard">Produk</a></p>
 <p><a href="{{ route('keranjang') }}">Keranjang</a></p>
 </div>
 
@@ -348,6 +348,7 @@ font-size:14px;
 <p><a href="/user/cara-belanja">Cara Belanja</a></p>
 <p><a href="/user/metode-pembayaran">Metode Pembayaran</a></p>
 <p><a href="/user/pengiriman">Pengiriman</a></p>
+<p><a href="/user/syarat_ketentuan">Syarat & Ketentuan</a></p>
 </div>
 
 <div>

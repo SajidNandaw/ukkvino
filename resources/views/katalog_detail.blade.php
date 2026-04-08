@@ -24,7 +24,11 @@ justify-content:space-between;
 
 .header-icons{display:flex;align-items:center;gap:25px;font-size:22px;}
 
-.cart-icon{position:relative;text-decoration:none;color:black;}
+.cart-icon{
+position:relative;
+text-decoration:none;
+color:black;
+}
 
 .cart-badge{
 position:absolute;
@@ -95,11 +99,21 @@ border-radius:10px;
 }
 
 .cart-btn{
+display:inline-block;
+text-decoration:none; /* hapus underline */
+text-align:center;
 background:#b6e2a1;
 padding:12px 30px;
 border-radius:10px;
 border:none;
+color:black;
 cursor:pointer;
+font-weight:600;
+transition:0.3s;
+}
+
+.cart-btn:hover{
+background:#a1d58e;
 }
 
 .shipping{
@@ -122,15 +136,12 @@ width:350px;
 </div>
 
 <div class="header-icons">
-
-<a href="{{ route('keranjang') }}" class="cart-icon">
+<!-- Semua diarahkan ke login jika belum login -->
+<a href="{{ route('login') }}" class="cart-icon">
 🛒
-@if($totalCart > 0)
-<span class="cart-badge">{{ $totalCart }}</span>
-@endif
 </a>
 
-<a href="{{ route('user.profile') }}" class="cart-icon">
+<a href="{{ route('login') }}" class="cart-icon">
 👤
 </a>
 
@@ -140,7 +151,8 @@ width:350px;
 
 <div class="container">
 
-<a href="{{ route('user.dashboard') }}" class="back-btn">⬅ Kembali</a>
+<!-- Kembali ke katalog -->
+<a href="{{ route('public.katalog') }}" class="back-btn">⬅ Kembali ke Beranda Produk</a>
 
 <div class="detail">
 
@@ -153,8 +165,8 @@ width:350px;
 <div class="shipping">
 <h3>Informasi Pengiriman</h3>
 <p>Subtotal : Rp {{ number_format($produk->harga) }}</p>
-<p>Ongkos Kirim : Rp 10.000</p>
-<p><strong>Total : Rp {{ number_format($produk->harga + 10000) }}</strong></p>
+<p>Ongkos Kirim : Rp 20.000</p>
+<p><strong>Total : Rp {{ number_format($produk->harga + 20000) }}</strong></p>
 </div>
 
 </div>
@@ -194,14 +206,10 @@ width:350px;
 Harga : Rp {{ number_format($produk->harga) }}
 </div>
 
-<form method="POST" action="{{ route('keranjang.add') }}">
-@csrf
-<input type="hidden" name="produk_id" value="{{ $produk->id }}">
-
-<button type="submit" class="cart-btn">
+<!-- Tombol keranjang diarahkan ke login -->
+<a href="{{ route('login') }}" class="cart-btn">
 🛒 Masukkan ke Keranjang
-</button>
-</form>
+</a>
 
 </div>
 
