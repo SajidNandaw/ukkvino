@@ -82,6 +82,11 @@
 
         .text b{font-size:14px;}
         .text p{font-size:12px;color:#666;}
+
+        /* ⭐ RATING (TAMBAHAN) */
+        .rating{display:flex;gap:5px;margin-top:10px;}
+        .star{font-size:20px;cursor:pointer;color:#ccc;}
+        .star.active{color:gold;}
     </style>
 </head>
 <body>
@@ -114,7 +119,6 @@
     @php
         $displayStatus = $transaksi->status;
 
-        // COD langsung dianggap diproses
         if($transaksi->metode == 'cod' && $transaksi->status == 'pending'){
             $displayStatus = 'diproses';
         }
@@ -159,8 +163,31 @@
                     <div class="item-name">
                         {{ $item->nama }} x{{ $item->qty }}
 
+                        {{-- ⭐ RATING MUNCUL SAAT SELESAI --}}
                         @if($displayStatus == 'selesai')
-                            <p style="color:green;margin-top:10px;font-weight:bold;">Pesanan selesai</p>
+
+                            @if(isset($ulasan) && $ulasan->has($item->produk_id))
+                                <p style="color:green;margin-top:10px;font-weight:bold;">
+                                    ✔ Rating sudah dikirim
+                                </p>
+                            @else
+                                <form action="{{ route('rating.store') }}" method="POST" onsubmit="return validateRating(this)">
+                                    @csrf
+                                    <input type="hidden" name="produk_id" value="{{ $item->produk_id }}">
+                                    <input type="hidden" name="rating" class="rating-value">
+
+                                    <div class="rating">
+                                        @for($i=1; $i<=5; $i++)
+                                            <span class="star" onclick="setRating(this, {{ $i }})">★</span>
+                                        @endfor
+                                    </div>
+
+                                    <button type="submit" class="btn" style="background:#f59e0b;margin-top:10px;">
+                                        Kirim Rating
+                                    </button>
+                                </form>
+                            @endif
+
                         @endif
                     </div>
 
@@ -194,13 +221,9 @@
                 </div>
             </div>
 
-            <!-- 🔥 FIX ALAMAT -->
             <div class="info-box">
                 <h3>Alamat Pengiriman</h3>
-                <p>
-
-                    {{ $transaksi->alamat ?? auth()->user()->alamat }}
-                </p>
+                <p>{{ $transaksi->alamat ?? auth()->user()->alamat }}</p>
             </div>
 
             @if(!$isCOD && $transaksi->status == 'pending')
@@ -216,9 +239,7 @@
 
         <div class="tracking">
 
-            {{-- TRANSFER --}}
             @if(!$isCOD)
-
                 <div class="step {{ ($displayStatus == 'pending') ? 'active' : 'done' }}">
                     <div class="circle">1</div>
                     <div class="text">
@@ -251,9 +272,7 @@
                     </div>
                 </div>
 
-            {{-- COD --}}
             @else
-
                 <div class="step {{ ($displayStatus == 'diproses') ? 'active' : (in_array($displayStatus,['dikirim','selesai']) ? 'done' : '') }}">
                     <div class="circle">1</div>
                     <div class="text">
@@ -277,13 +296,35 @@
                         <p>Paket sudah terkirim dan sampai ke tertuju</p>
                     </div>
                 </div>
-
             @endif
 
         </div>
     </div>
 
 </div>
+
+{{-- ⭐ JS RATING --}}
+<script>
+function setRating(el, value){
+    let stars = el.parentElement.querySelectorAll('.star');
+    let input = el.closest('form').querySelector('.rating-value');
+
+    input.value = value;
+
+    stars.forEach((s, i)=>{
+        s.classList.toggle('active', i < value);
+    });
+}
+
+function validateRating(form){
+    let rating = form.querySelector('.rating-value').value;
+    if(!rating){
+        alert("Silakan pilih rating dulu!");
+        return false;
+    }
+    return true;
+}
+</script>
 
 </body>
 </html>
